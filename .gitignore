@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+
+# Expo
+.expo/
+dist/
+.metro-cache/
+
+# Environment
+.env.local
+backend/.env
+
+# Build
+build/
+*.tgz
+
+# IDE
+.vscode/
+.idea/
