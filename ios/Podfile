@@ -1,0 +1,33 @@
+platform :ios, '14.0'
+
+# Compliance: iOS deployment target 14.0 (Apple App Store requirement)
+# This ensures compatibility with supported iOS versions
+
+target 'HaynesDealerVault' do
+  # Pods for HaynesDealerVault
+  pod 'React', :path => '../node_modules/react-native'
+  pod 'React-RCTText', :path => '../node_modules/react-native'
+  pod 'React-RCTImage', :path => '../node_modules/react-native'
+  pod 'React-RCTNetwork', :path => '../node_modules/react-native'
+  pod 'React-RCTAnimation', :path => '../node_modules/react-native'
+  pod 'React-RCTActionSheetIOS', :path => '../node_modules/react-native'
+  pod 'React-RCTAppDelegate', :path => '../node_modules/react-native'
+  pod 'React-RCTBlob', :path => '../node_modules/react-native'
+  pod 'React-RCTSettings', :path => '../node_modules/react-native'
+  pod 'React-RCTVibration', :path => '../node_modules/react-native'
+  pod 'React-Core/DevSupport', :path => '../node_modules/react-native'
+  pod 'React-jsi', :path => '../node_modules/react-native'
+  pod 'React-logger', :path => '../node_modules/react-native'
+  pod 'React-perflogger', :path => '../node_modules/react-native'
+  pod 'React-hermes', :path => '../node_modules/react-native'
+
+  # Flipper (development only)
+  post_install do |installer|
+    flipper_post_install(installer)
+  end
+end
+
+target 'HaynesDealerVault-tvOS' do
+  # Pods for HaynesDealerVault-tvOS
+  platform :tvos, '14.0'
+end
