@@ -2,6 +2,8 @@
  * Parts Ordering Service - TypeScript/React Native
  * Client-side service for communicating with the parts ordering API
  * Handles parts search, referral links, and diagnosis integration
+ * 
+ * PRODUCTION BUILD: Console logs are stripped via babel-plugin-transform-remove-console
  */
 
 import axios, { AxiosInstance } from 'axios';
@@ -92,7 +94,10 @@ class PartsOrderingService {
 
       return response.data;
     } catch (error) {
-      console.error('Error searching parts:', error);
+      // Console logs automatically stripped in production build via babel plugin
+      if (__DEV__) {
+        console.error('Error searching parts:', error);
+      }
       throw error;
     }
   }
@@ -125,7 +130,9 @@ class PartsOrderingService {
 
       return response.data;
     } catch (error) {
-      console.error('Error searching parts with query:', error);
+      if (__DEV__) {
+        console.error('Error searching parts with query:', error);
+      }
       throw error;
     }
   }
@@ -139,7 +146,9 @@ class PartsOrderingService {
       const response = await this.api.post<string[]>('/api/parts/suppliers');
       return response.data;
     } catch (error) {
-      console.error('Error fetching suppliers:', error);
+      if (__DEV__) {
+        console.error('Error fetching suppliers:', error);
+      }
       throw error;
     }
   }
@@ -177,7 +186,9 @@ class PartsOrderingService {
 
       return response.data;
     } catch (error) {
-      console.error('Error getting diagnosis suggestions:', error);
+      if (__DEV__) {
+        console.error('Error getting diagnosis suggestions:', error);
+      }
       throw error;
     }
   }
@@ -206,7 +217,9 @@ class PartsOrderingService {
 
       return response.data;
     } catch (error) {
-      console.error(`Error searching ${supplierName}:`, error);
+      if (__DEV__) {
+        console.error(`Error searching ${supplierName}:`, error);
+      }
       throw error;
     }
   }
@@ -235,7 +248,9 @@ class PartsOrderingService {
 
       return response.data;
     } catch (error) {
-      console.error(`Error fetching OEM links for ${manufacturer}:`, error);
+      if (__DEV__) {
+        console.error(`Error fetching OEM links for ${manufacturer}:`, error);
+      }
       throw error;
     }
   }
@@ -249,18 +264,21 @@ class PartsOrderingService {
       const response = await this.api.get('/api/parts/health');
       return response.data;
     } catch (error) {
-      console.error('Parts service health check failed:', error);
+      if (__DEV__) {
+        console.error('Parts service health check failed:', error);
+      }
       throw error;
     }
   }
 
   /**
-   * Open a parts link in the device browser
+   * Open a parts link in the native browser (Safari on iOS, Chrome on Android)
+   * Never use WebView for external checkout - security risk
    * @param url - The URL to open
    */
   async openPartLink(url: string): Promise<void> {
     try {
-      // For React Native, use Linking API
+      // For React Native, use Linking API which opens native browser
       const { Linking } = require('react-native');
       const canOpen = await Linking.canOpenURL(url);
       if (canOpen) {
@@ -269,7 +287,9 @@ class PartsOrderingService {
         throw new Error(`Cannot open URL: ${url}`);
       }
     } catch (error) {
-      console.error('Error opening part link:', error);
+      if (__DEV__) {
+        console.error('Error opening part link:', error);
+      }
       throw error;
     }
   }
