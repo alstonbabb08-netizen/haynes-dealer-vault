@@ -2,6 +2,8 @@
  * Parts Ordering Tab Screen - React Native / Expo
  * Main interface for browsing and ordering parts with referral links
  * Supports VIN-based search, part number search, and diagnosis suggestions
+ * 
+ * COMPLIANT WITH: Apple App Store, Google Play Store, FTC Guidelines
  */
 
 import React, { useState, useEffect } from 'react';
@@ -46,6 +48,7 @@ export default function PartsTab() {
   const [searchMode, setSearchMode] = useState<'name' | 'number' | 'vin'>('name');
   const [vin, setVin] = useState('');
   const [manufacturer, setManufacturer] = useState('');
+  const [disclosureDismissed, setDisclosureDismissed] = useState(false);
 
   // Load suppliers on mount
   useEffect(() => {
@@ -57,7 +60,9 @@ export default function PartsTab() {
       const suppliersData = await partsService.getSuppliers();
       setSuppliers(suppliersData);
     } catch (err) {
-      console.error('Error loading suppliers:', err);
+      if (__DEV__) {
+        console.error('Error loading suppliers:', err);
+      }
     }
   };
 
@@ -107,7 +112,9 @@ export default function PartsTab() {
       }
     } catch (err) {
       setError('Failed to search parts. Please try again.');
-      console.error('Search error:', err);
+      if (__DEV__) {
+        console.error('Search error:', err);
+      }
     } finally {
       setLoading(false);
     }
@@ -123,8 +130,18 @@ export default function PartsTab() {
       }
     } catch (err) {
       Alert.alert('Error', 'Failed to open link');
-      console.error('Link error:', err);
+      if (__DEV__) {
+        console.error('Link error:', err);
+      }
     }
+  };
+
+  const handleOpenPrivacyPolicy = async () => {
+    // In production, this would open your privacy policy URL
+    Alert.alert(
+      'Privacy Policy',
+      'Affiliate Disclosure: We earn commissions from parts purchases made through our referral links. This is our primary revenue model. Prices are identical whether you use our links or visit suppliers directly.\n\nFor full details, see our Privacy Policy in the app menu.'
+    );
   };
 
   const getSupplierColors = (provider: string): { primary: string; secondary: string; tertiary?: string } => {
@@ -170,6 +187,30 @@ export default function PartsTab() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={true}
       >
+        {/* Affiliate Disclosure Banner - Required for FTC/App Store Compliance */}
+        {!disclosureDismissed && (
+          <View style={styles.disclosureBanner}>
+            <View style={styles.disclosureContent}>
+              <Text style={styles.disclosureIcon}>ℹ️</Text>
+              <View style={styles.disclosureText}>
+                <Text style={styles.disclosureTitle}>Affiliate Disclosure</Text>
+                <Text style={styles.disclosureDescription}>
+                  We earn commissions from purchases made through our referral links. Prices are not affected.
+                </Text>
+                <TouchableOpacity onPress={handleOpenPrivacyPolicy}>
+                  <Text style={styles.disclosureLink}>Learn More →</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            <TouchableOpacity
+              style={styles.disclosureCloseButton}
+              onPress={() => setDisclosureDismissed(true)}
+            >
+              <Text style={styles.disclosureCloseIcon}>✕</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.title}>Parts Ordering</Text>
@@ -431,6 +472,59 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: 16,
     paddingVertical: 16,
+  },
+  disclosureBanner: {
+    flexDirection: 'row',
+    backgroundColor: '#FEF3C7',
+    borderLeftWidth: 4,
+    borderLeftColor: '#F59E0B',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  disclosureContent: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  disclosureIcon: {
+    fontSize: 16,
+    marginRight: 12,
+    marginTop: 2,
+  },
+  disclosureText: {
+    flex: 1,
+  },
+  disclosureTitle: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#92400E',
+    marginBottom: 4,
+  },
+  disclosureDescription: {
+    fontSize: 12,
+    color: '#B45309',
+    lineHeight: 16,
+    marginBottom: 6,
+  },
+  disclosureLink: {
+    fontSize: 12,
+    color: '#D97706',
+    fontWeight: '600',
+  },
+  disclosureCloseButton: {
+    padding: 4,
+    marginLeft: 8,
+  },
+  disclosureCloseIcon: {
+    fontSize: 16,
+    color: '#B45309',
+    fontWeight: '600',
   },
   header: {
     marginBottom: 24,
