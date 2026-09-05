@@ -1,0 +1,65 @@
+{
+  "cli": {
+    "version": ">= 5.0.0",
+    "promptToConfigurePushNotifications": false
+  },
+  "build": {
+    "preview": {
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "preview2": {
+      "android": {
+        "buildType": "apk"
+      },
+      "ios": {
+        "buildType": "simulator"
+      }
+    },
+    "preview3": {
+      "developmentClient": true
+    },
+    "production": {
+      "android": {
+        "buildType": "aab",
+        "gradleCommand": ":app:bundleRelease"
+      },
+      "ios": {
+        "buildType": "archive"
+      }
+    },
+    "android-compliance": {
+      "android": {
+        "buildType": "aab",
+        "gradleCommand": ":app:bundleRelease",
+        "env": {
+          "ANDROID_COMPILE_SDK": "34",
+          "ANDROID_TARGET_SDK": "34",
+          "ANDROID_MIN_SDK": "21"
+        }
+      }
+    },
+    "ios-compliance": {
+      "ios": {
+        "buildType": "archive",
+        "env": {
+          "IOS_DEPLOYMENT_TARGET": "14.0"
+        }
+      }
+    }
+  },
+  "submit": {
+    "production": {
+      "android": {
+        "serviceAccount": "~/.android/service-account.json",
+        "track": "internal"
+      },
+      "ios": {
+        "appleId": "your-apple-id@example.com",
+        "ascAppId": "your-app-id",
+        "appleTeamId": "your-team-id"
+      }
+    }
+  }
+}
