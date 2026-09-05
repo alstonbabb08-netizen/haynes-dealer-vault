@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mechmate.haynesdealervault">
+
+    <!--
+        COMPLIANCE NOTICE: Android Manifest
+        This file declares all permissions required by the app for:
+        - Google Play Store submission
+        - User privacy and security
+        - Functional requirements
+        
+        Last Updated: 2026-09-05
+    -->
+
+    <!-- REQUIRED PERMISSIONS -->
+    
+    <!-- Network access for API calls and parts search -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    
+    <!-- Required for HTTPS certificate validation -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    
+    <!-- Camera for barcode/QR code scanning -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    
+    <!-- Optional: Location for local parts store finder -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    
+    <!-- Optional: Read device state for crash reporting -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <!-- FEATURE DECLARATIONS -->
+    <!-- These tell Google Play which devices can install the app -->
+    
+    <!-- Camera is used but not required - app works without it -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+    
+    <!-- Location is optional -->
+    <uses-feature
+        android:name="android.hardware.location"
+        android:required="false" />
+    
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="false" />
+
+    <!-- APP CONFIGURATION -->
+    <application
+        android:allowBackup="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="false">
+
+        <!--
+            SECURITY: usesCleartextTraffic="false"
+            Forces HTTPS for all network connections
+            Compliant with Google Play requirements
+        -->
+
+        <!--
+            SECURITY: allowBackup="false"
+            Prevents sensitive data backup to Google Cloud
+        -->
+
+        <!-- Main Activity -->
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:theme="@style/LaunchTheme">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Handle deep links for affiliate URLs -->
+        <activity
+            android:name=".DeepLinkActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" />
+            </intent-filter>
+        </activity>
+
+        <!-- Firebase services -->
+        <service
+            android:name="com.google.firebase.messaging.FirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <!-- Broadcast receiver for connectivity changes -->
+        <receiver
+            android:name=".receivers.NetworkChangeReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Meta tags for app configuration -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <!-- Google Play App Signing -->
+        <meta-data
+            android:name="com.google.android.gms.games.APP_ID"
+            android:value="@string/app_id" />
+    </application>
+
+    <!-- USES-SDK Configuration (handled by build.gradle, shown here for reference) -->
+    <!--
+    <uses-sdk
+        android:minSdkVersion="21"
+        android:targetSdkVersion="34" />
+    -->
+
+</manifest>
